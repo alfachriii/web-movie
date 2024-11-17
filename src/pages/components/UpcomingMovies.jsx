@@ -1,14 +1,19 @@
 import React from "react";
 import moviePoster from "../../assets/LIFT.jpg";
 import Movie from "./Movie";
+import { useFetchUpcomingMovies } from "../../features/useFetchUpcomingMovies";
 
-const PopularMovie = () => {
+const UpcomingMovies = () => {
+
+  const { data: upcomingMoviesData, isLoading: fetchUpcomingLoading } = useFetchUpcomingMovies()
+  console.log(upcomingMoviesData)
+
   return (
     <div id="popular-movie" className="w-2/5">
       <h2>Popular Movie</h2>
-      <div className="movies-con flex w-ful justify-between flex-wrap">
-        <div className="movie w-44 h-80 flex flex-col items-center mt-5">
-          <Movie />
+      <div className="movies-con flex w-full max-h-[750px] flex-wrap ">
+        {/* <div className="movie w-44 h-80 flex flex-col items-center mt-5"> */}
+          <Movie data={upcomingMoviesData?.data.results} scale="forUpcomingMovies"/>
           {/* <div className="poster relative w-full h-5/6">
             <img
               src={moviePoster}
@@ -55,10 +60,10 @@ const PopularMovie = () => {
             <h3 className="font-medium text-center mt-3">
                 gta 6 beta
             </h3>*/}
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );
 };
 
-export default PopularMovie;
+export default UpcomingMovies;

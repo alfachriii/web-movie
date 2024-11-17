@@ -1,24 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useState } from "react";
 
-const getMoviesFromLocal = () => {
-    const isMovies = localStorage.getItem("movies")
-    if(isMovies === undefined) return null
-    if(isMovies) return JSON.parse(localStorage.getItem("movies"))
-}
+// const [moviesData, setMoviesData] = useState({})
+
+const getMoviesFromLocal = (name) => {
+  const isMovies = localStorage.getItem(name);
+  if (!isMovies) return [];
+
+  if (isMovies) {
+    try {
+      return JSON.parse(localStorage.getItem(name));
+    } catch (err) {
+      console.error("Value 'movies' di localstorage: undefined");
+      return []
+    }
+  }
+};
 
 // getMoviesFromLocal()
 
 const moviesSlice = createSlice({
-    name: "movies",
-    initialState: {
-        data: getMoviesFromLocal() || [],
+  name: "movies",
+  initialState: {
+    popular: {
+        data: getMoviesFromLocal("popular_movies") 
     },
-    reducers: {
-        addMovie(state, action) {
-            state.data.push(action.payload)
-        }
+    upcoming: {
+        data: getMoviesFromLocal("upcoming_movies")
     }
-})
+  },
+  reducers: {
+    addMovie(state, action) {
+      state.data.push(action.payload);
+    },
+  },
+});
 
-export const { addMovie } = moviesSlice.actions
-export default moviesSlice.reducer 
+export const { addMovie } = moviesSlice.actions;
+export default moviesSlice.reducer;
