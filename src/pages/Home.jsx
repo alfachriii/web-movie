@@ -15,7 +15,7 @@ const Home = () => {
   const {
     data: dataPopularMovies,
     isLoading: isLoadingFetchPopularMovie,
-    isError,
+    isError: isErorrFetchPopularMovie,
   } = useFetchPopularMovies();
 
   //   console.log(dataPopularMovies)
@@ -106,10 +106,14 @@ const Home = () => {
     await searchRefetch();
   };
 
-  // console.log(movieSearchResults);
-  //   console.log(shouldFetch);
-
   const ShowMovies = () => {
+    if (isErorrFetchPopularMovie || !isPopularMoviesData)
+      return (
+        <div className="sm:w-2/3 w-10/12 min-h-64 mt-4 flex justify-center items-center text-gray-500">
+          <h1 className="text-4xl">{":("}</h1>
+          <h2 className="">Movies data Not Found</h2>
+        </div>
+      );
     if (!movieSearchResults.length || !shouldFetch) return <PopularMovie />;
     return (
       <div id="search-movies" className="sm:w-2/3 w-10/12 mt-4">
@@ -121,50 +125,45 @@ const Home = () => {
     );
   };
 
+  console.log(isErorrFetchPopularMovie);
+
   return (
     <>
-      {!isPopularMoviesData ? (
-        <div className="sm:w-2/3 w-full h-96 mt-10 flex flex-col items-center pr-28">
-          <PiSmileySadFill className="text-gray-500 text-5" />
-          <h1 className="text-3xl font-medium text-gray-500">ERR Bad Server</h1>
-        </div>
-      ) : (
-        <div
-          id="home"
-          className="flex flex-col items-center text-stone-300 w-full h-fit"
-        >
-          <Navbar
-            value={searchKeyword}
-            onChange={handleChangeSearch}
-            onSearch={handleSearchMovie}
-          />
-          <div id="explore" className="sm:w-2/3 w-10/12 flex flex-col">
-            <h2 className="font-bold lg:text-3xl text-xl">Explore</h2>
-            <h3 className="text-stone-400 lg:text-xl text-base">
-              What are you gonna watch today?
-            </h3>
-            <GoToMovieDetails id={selectedMovieData.id}>
-              <div className="img-preview relative mt-3">
-                <div className="img w-full sm:h-48 h-32">
-                  <img
-                    src={`${baseImgUrl}${selectedMovieData?.backdrop_path}`}
-                    className="w-full h-full object-cover rounded-lg opacity-80"
-                    alt=""
-                  />
-                </div>
-                <div className="overlay absolute top-0 w-full h-full bg-gradient-to-r from-black from-10% to-transparent opacity-90 rounded-lg"></div>
-                <div className="text-preview sm:p-10 p-5 absolute sm:bottom-5 bottom-0 w-3/4">
-                  <h2>{selectedMovieData?.title}</h2>
-                  <h3 className="mt-2 font-thin lg:text-xl sm:text-base text-sm">
-                    {limittedOverView}
-                  </h3>
-                </div>
+      <div
+        id="home"
+        className="flex flex-col items-center text-stone-300 w-full h-fit"
+      >
+        <Navbar
+          value={searchKeyword}
+          onChange={handleChangeSearch}
+          onSearch={handleSearchMovie}
+        />
+        <div id="explore" className="sm:w-2/3 w-10/12 flex flex-col">
+          <h2 className="font-bold lg:text-3xl text-xl">Explore</h2>
+          <h3 className="text-stone-400 lg:text-xl text-base">
+            What are you gonna watch today?
+          </h3>
+          <GoToMovieDetails id={selectedMovieData.id}>
+            <div className="img-preview relative mt-3">
+              <div className="img w-full sm:h-48 h-32">
+                <img
+                  src={`${baseImgUrl}${selectedMovieData?.backdrop_path}`}
+                  className="w-full h-full object-cover rounded-lg opacity-80"
+                  alt=""
+                />
               </div>
-            </GoToMovieDetails>
-          </div>
-          <ShowMovies />
+              <div className="overlay absolute top-0 w-full h-full bg-gradient-to-r from-black from-10% to-transparent opacity-90 rounded-lg"></div>
+              <div className="text-preview sm:p-10 p-5 absolute sm:bottom-5 bottom-0 w-3/4">
+                <h2>{selectedMovieData?.title}</h2>
+                <h3 className="mt-2 font-thin lg:text-xl sm:text-base text-sm">
+                  {limittedOverView}
+                </h3>
+              </div>
+            </div>
+          </GoToMovieDetails>
         </div>
-      )}
+        <ShowMovies />
+      </div>
     </>
   );
 };

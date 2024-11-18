@@ -7,7 +7,6 @@ export const useFetchPopularMovies = () => {
     queryKey: ["popular_movie"],
     queryFn: async () => {
       const response = await api.get(`3/movie/popular?api_key=${apiKey}`);
-      if(!response?.data) return []
       return response;
     },
   });

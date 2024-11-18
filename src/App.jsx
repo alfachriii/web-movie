@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Router, Route, Redirect } from "wouter";
+import { useEffect, useState } from "react";
+import { Router, Route, Redirect, useLocation } from "wouter";
 import Home from "./pages/Home";
 import MovieDetails from "./pages/MovieDetails";
 import MovieList from "./pages/MovieListGenre";
@@ -10,6 +10,14 @@ import MovieListGenre from "./pages/MovieListGenre";
 
 function App() {
   const queryClient = new QueryClient()
+
+  const [location, setLocation] = useLocation();
+
+  useEffect(() => {
+    if (location === '/') {
+      setLocation('/home'); // Redirect ke /home jika berada di path utama
+    }
+  }, [location, setLocation]);
   return (
     <>
       <Provider store={store}>

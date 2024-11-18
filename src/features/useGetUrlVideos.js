@@ -8,7 +8,7 @@ export const useGetUrlVideos = (id) => {
         queryKey: ["videos_movie", id],
         queryFn: async () => {
             const response = await api.get(`3/movie/${id}/videos?api_key=${apiKey}`)
-            return response.data.results[1]
+            return response.data.results[0]
         }
     })
 }

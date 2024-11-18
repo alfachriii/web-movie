@@ -8,7 +8,6 @@ const fetchMovies = async (searchKeyword) => {
   const response = await api.get(
     `3/search/movie?query=${searchKeyword}&api_key=${apiKey}`
   );
-  if(!response?.data.results) return []
   return response.data.results; // Sesuaikan dengan struktur data API
 };
 

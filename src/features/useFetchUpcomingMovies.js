@@ -8,7 +8,6 @@ export const useFetchUpcomingMovies = () => {
         queryKey: ["upcoming_movies"],
         queryFn: async () => {
             const response = await api.get(`3/movie/upcoming?api_key=${apiKey}`)
-            if(!response?.data) return []
             return response
         }
     })
