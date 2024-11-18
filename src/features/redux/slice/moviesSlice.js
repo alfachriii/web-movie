@@ -23,11 +23,11 @@ const moviesSlice = createSlice({
   name: "movies",
   initialState: {
     popular: {
-        data: getMoviesFromLocal("popular_movies") 
+        data: getMoviesFromLocal("popular_movies") || []
     },
     upcoming: {
-        data: getMoviesFromLocal("upcoming_movies")
-    }
+        data: getMoviesFromLocal("upcoming_movies") || []
+    },
   },
   reducers: {
     addMovie(state, action) {

@@ -8,6 +8,7 @@ import { PiSmileySadFill } from "react-icons/pi";
 import { useFetchPopularMovies } from "../features/useFetchPopularMovies";
 import { useSearchMovies } from "../features/useSearchMovies";
 import Movie from "./components/Movie";
+import GoToMovieDetails from "../components/GoToMovieDetails";
 
 const Home = () => {
   const baseImgUrl = import.meta.env.VITE_BASE_IMG_URL;
@@ -16,7 +17,9 @@ const Home = () => {
     isLoading: isLoadingFetchPopularMovie,
     isError,
   } = useFetchPopularMovies();
-  useAddToLocalStorage("popular_movies", dataPopularMovies?.data.results);
+
+//   console.log(dataPopularMovies)
+  useAddToLocalStorage("popular_movies", dataPopularMovies?.data.results || []);
 
   const popularMoviesData = useSelector((state) => state.movies.popular.data);
 
@@ -28,6 +31,7 @@ const Home = () => {
   }, [popularMoviesData]);
 
   const [selectedMovieData, setSelectedMovieData] = useState({});
+//   console.log(selectedMovieData)
   const getSelectedMovieData = () => {
     const random = Math.floor(Math.random() * 21);
     setSelectedMovieData(popularMoviesData[random]);
@@ -92,7 +96,7 @@ const Home = () => {
   };
 
   // console.log(movieSearchResults);
-  console.log(shouldFetch);
+//   console.log(shouldFetch);
 
   const ShowMovies = () => {
     if (!movieSearchResults.length || !shouldFetch) return <PopularMovie />;
@@ -128,22 +132,24 @@ const Home = () => {
             <h3 className="text-stone-400 lg:text-xl text-base">
               What are you gonna watch today?
             </h3>
-            <div className="img-preview relative mt-3">
-              <div className="img w-full sm:h-48 h-32">
-                <img
-                  src={`${baseImgUrl}${selectedMovieData?.backdrop_path}`}
-                  className="w-full h-full object-cover rounded-lg opacity-80"
-                  alt=""
-                />
+            <GoToMovieDetails >
+              <div className="img-preview relative mt-3">
+                <div className="img w-full sm:h-48 h-32">
+                  <img
+                    src={`${baseImgUrl}${selectedMovieData?.backdrop_path}`}
+                    className="w-full h-full object-cover rounded-lg opacity-80"
+                    alt=""
+                  />
+                </div>
+                <div className="overlay absolute top-0 w-full h-full bg-gradient-to-r from-black from-10% to-transparent opacity-90 rounded-lg"></div>
+                <div className="text-preview sm:p-10 p-5 absolute sm:bottom-5 bottom-0 w-3/4">
+                  <h2>{selectedMovieData?.title}</h2>
+                  <h3 className="mt-2 font-thin lg:text-xl sm:text-base text-sm">
+                    {limittedOverView}
+                  </h3>
+                </div>
               </div>
-              <div className="overlay absolute top-0 w-full h-full bg-gradient-to-r from-black from-10% to-transparent opacity-90 rounded-lg"></div>
-              <div className="text-preview sm:p-10 p-5 absolute sm:bottom-5 bottom-0 w-3/4">
-                <h2>{selectedMovieData?.title}</h2>
-                <h3 className="mt-2 font-thin lg:text-xl sm:text-base text-sm">
-                  {limittedOverView}
-                </h3>
-              </div>
-            </div>
+            </GoToMovieDetails>
           </div>
           <ShowMovies />
         </div>

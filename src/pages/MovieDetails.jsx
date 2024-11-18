@@ -4,28 +4,32 @@ import YouTube from "react-youtube";
 import posterLift from "../assets/LIFT.jpg";
 import posterFighter from "../assets/fighter.jpeg";
 import posterInception from "../assets/inception.jpg";
-import { useParams } from "wouter";
+import { Link, useParams } from "wouter";
 import { useGetDetailsMovie } from "../features/useGetDetailsMovie";
 import UpcomingMovies from "./components/UpcomingMovies";
 import { useNavigate } from "react-router-dom";
+import { useGetUrlVideos } from "../features/useGetUrlVideos";
 
 const MovieDetails = () => {
   const { id } = useParams();
   const baseImgUrl = import.meta.env.VITE_BASE_IMG_URL;
 
-  const {data, isLoading} = useGetDetailsMovie(id)
+  const { data, isLoading } = useGetDetailsMovie(id);
+  const { data: urlMovie } = useGetUrlVideos(id)
+
+  console.log(urlMovie)
 
   const movieDetailsData = data?.data;
-
-  console.log(movieDetailsData);
 
   if (!id || !movieDetailsData)
     return <h2 className="text-stone-300">Movie not found</h2>;
 
-  const getYoutubeUrl = (url) => {
-    if (!url) return "";
-    if (url) return url;
+  const getYoutubeUrl = () => {
+    if (!urlMovie) return "";
+    if (urlMovie) return urlMovie.key
   };
+
+  console.log(movieDetailsData.genres);
 
   const getGenres = () => {
     const unFormatGenres = movieDetailsData.genres.map((genre) =>
@@ -35,11 +39,17 @@ const MovieDetails = () => {
     return formatedGenres;
   };
 
+  const reload = () => {
+    setTimeout(() => {
+      location.reload();
+    }, 10);
+  };
+
   const opt = {
     height: "302",
     width: "540",
     playerVars: {
-      autoPlay: 0,
+      autoPlay: 1,
     },
   };
 
@@ -52,10 +62,7 @@ const MovieDetails = () => {
             movieDetailsData.title
           } - ${movieDetailsData.release_date.slice(0, 4)}`}</h2>
           <div className="w-fit h-fit overflow-hidden rounded-xl mt-5 bg-gray-600">
-            <YouTube
-              videoId={getYoutubeUrl(movieDetailsData.video)}
-              opts={opt}
-            />
+            <YouTube videoId={getYoutubeUrl} opts={opt} />
           </div>
           <div className="flex mt-10 w-11/12 ">
             <div className="poster w-4/12 h-56">
@@ -74,8 +81,24 @@ const MovieDetails = () => {
               <h4 className="text-base text-stone-500 mt-1">
                 {movieDetailsData.release_date}
               </h4>
-              <h3 className="mt-5">Genre:</h3>
-              <h4 className="text-base text-stone-500 mt-1">{getGenres()}</h4>
+              <h3 className="mt-5 mb-2">Genre:</h3>
+              <div className="flex flex-wrap gap-2">
+                {movieDetailsData.genres.map((genre) => (
+                  <Link
+                    key={genre.id}
+                    to={`/genre/${genre.name.toLowerCase()}/${genre.id}`}
+                    onClick={reload}
+                  >
+                    <div className="p-0.5 px-3 rounded-xl border border-gray-400 text-gray-400 hover:border-gray-300">
+
+                    <h4 className="text-base hover:text-gray-300">
+                      {genre.name}
+                    </h4>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              {/* <h4 className="text-base text-stone-500 mt-1">{getGenres()}</h4> */}
               <h3 className="mt-5">Overview:</h3>
               <h4 className="text-base text-stone-500 mt-1">
                 {movieDetailsData.overview}

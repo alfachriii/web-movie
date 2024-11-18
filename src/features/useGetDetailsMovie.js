@@ -7,6 +7,7 @@ export const useGetDetailsMovie = (id) => {
     queryKey: ["movieDetails"],
     queryFn: async () => {
       const response = await api.get(`3/movie/${id}?api_key=${apiKey}`);
+      if(!response?.data) return []
       return response;
     },
   });

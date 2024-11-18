@@ -3,11 +3,11 @@ import { api } from "./configAxios"
 
 const apiKey = import.meta.env.VITE_API_KEY
 
-export const useFetchUpcomingMovies = () => {
+export const useFetchMovieGenre = (genreId) => {
     return useQuery({
-        queryKey: ["upcoming_movies"],
+        queryKey: ["movielist_genre", genreId],
         queryFn: async () => {
-            const response = await api.get(`3/movie/upcoming?api_key=${apiKey}`)
+            const response = await api.get(`3/discover/movie?with_genres=${genreId}&api_key=${apiKey}`)
             if(!response?.data) return []
             return response
         }

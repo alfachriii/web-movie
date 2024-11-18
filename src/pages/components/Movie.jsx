@@ -12,7 +12,7 @@ const Movie = ({ data, scale }) => {
   // console.log(moviesData, isMoviesData)
 
   useEffect(() => {
-    if (!moviesData || moviesData === undefined) setIsMoviesData(false);
+    if (!moviesData || moviesData === undefined || !moviesData.lenght) setIsMoviesData(false);
     if (moviesData) setIsMoviesData(true);
   }, [moviesData]);
 
@@ -28,12 +28,12 @@ const Movie = ({ data, scale }) => {
   const ScaleValid = ({ children }) => {
     if (scale === "forUpcomingMovies")
       return (
-        <div className="movie-box md:w-28 sm:w-20 w-12 md:h-52 sm:h-44 h-28 flex flex-col items-center mb-10 m-2 cursor-pointer hover:scale-90 transition duration-150 ease-in-out scale-75">
+        <div className="movie-box md:w-28 sm:w-20 w-12 md:h-52 sm:h-44 h-28 flex flex-col items-center m-2 cursor-pointer hover:scale-90 transition duration-150 ease-in-out scale-75">
           {children}
         </div>
       );
     return (
-      <div className="movie-box md:w-28 sm:w-20 w-12 md:h-52 sm:h-44 h-28 flex flex-col items-center mb-10 m-3 cursor-pointer hover:scale-105 transition duration-150 ease-in-out">
+      <div className="movie-box md:w-28 sm:w-20 w-12 md:h-52 sm:h-44 h-28 flex flex-col items-center mb-10 m-3 cursor-pointer hover:scale-110 transition duration-150 ease-in-out">
         {children}
       </div>
     );
