@@ -18,7 +18,7 @@ const Home = () => {
     isError,
   } = useFetchPopularMovies();
 
-//   console.log(dataPopularMovies)
+  //   console.log(dataPopularMovies)
   useAddToLocalStorage("popular_movies", dataPopularMovies?.data.results || []);
 
   const popularMoviesData = useSelector((state) => state.movies.popular.data);
@@ -31,17 +31,28 @@ const Home = () => {
   }, [popularMoviesData]);
 
   const [selectedMovieData, setSelectedMovieData] = useState({});
-//   console.log(selectedMovieData)
+  //   console.log(selectedMovieData)
   const getSelectedMovieData = () => {
     const random = Math.floor(Math.random() * 21);
     setSelectedMovieData(popularMoviesData[random]);
   };
+
+  const [screenSize, setScreenSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   const limitWords = (words) => {
     if (words) {
       const unLimitWords = words.split(" ");
       //   console.log(unLimitWords);
       let limittedWord = [];
+      if (screenSize.width < 450) {
+        for (let i = 0; i < 19; i++) {
+          limittedWord.push(unLimitWords[i]);
+        }
+        return limittedWord.join(" ").concat("...");
+      }
       for (let i = 0; i < 28; i++) {
         limittedWord.push(unLimitWords[i]);
       }
@@ -96,7 +107,7 @@ const Home = () => {
   };
 
   // console.log(movieSearchResults);
-//   console.log(shouldFetch);
+  //   console.log(shouldFetch);
 
   const ShowMovies = () => {
     if (!movieSearchResults.length || !shouldFetch) return <PopularMovie />;
@@ -132,7 +143,7 @@ const Home = () => {
             <h3 className="text-stone-400 lg:text-xl text-base">
               What are you gonna watch today?
             </h3>
-            <GoToMovieDetails >
+            <GoToMovieDetails id={selectedMovieData.id}>
               <div className="img-preview relative mt-3">
                 <div className="img w-full sm:h-48 h-32">
                   <img

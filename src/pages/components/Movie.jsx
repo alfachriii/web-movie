@@ -28,12 +28,12 @@ const Movie = ({ data, scale }) => {
   const ScaleValid = ({ children }) => {
     if (scale === "forUpcomingMovies")
       return (
-        <div className="movie-box md:w-28 sm:w-20 w-12 md:h-52 sm:h-44 h-28 flex flex-col items-center m-2 cursor-pointer hover:scale-90 transition duration-150 ease-in-out scale-75">
+        <div className="movie-box md:w-28 sm:w-20 w-12 md:h-52 sm:h-44 h-28 flex flex-col items-center m-2 cursor-pointer hover:scale-90 transition duration-150 ease-in-out lg:scale-75 scale-100">
           {children}
         </div>
       );
     return (
-      <div className="movie-box md:w-28 sm:w-20 w-12 md:h-52 sm:h-44 h-28 flex flex-col items-center mb-10 m-3 cursor-pointer hover:scale-110 transition duration-150 ease-in-out">
+      <div className="movie-box md:w-28 sm:w-20 w-16 md:h-52 sm:h-44 h-28 flex flex-col items-center mb-10 sm:m-2 m-1 cursor-pointer hover:scale-110 transition duration-150 ease-in-out">
         {children}
       </div>
     );
@@ -52,10 +52,10 @@ const Movie = ({ data, scale }) => {
               />
               <div className="overlay w-full h-full absolute top-0 bg-gradient-to-b from-transparent from-15% to-gray-800 opacity-90 rounded-lg"></div>
               <div className="w-full absolute bottom-5 flex justify-center">
-                <h3 className="text-yellow-500">{movie.vote_average}</h3>
+                <h3 className="text-yellow-500 lg:text-xl sm:text-base text-sm">{movie.vote_average.toString().slice(0, 3)}</h3>
               </div>
             </div>
-            <h3 className="font-medium text-center mt-3 lg:text-xl sm:text-base text-xs">
+            <h3 className="font-medium text-center mt-3 lg:text-xl sm:text-base text-sm">
               {movie.title}
             </h3>
           </ScaleValid>
