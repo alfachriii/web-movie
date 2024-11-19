@@ -78,7 +78,7 @@ const Navbar = ({ wSearch = true, value, onChange, onSearch }) => {
     reload();
   };
 
-  console.log(isSidebar)
+  // console.log(isSidebar)
 
   return (
     <>

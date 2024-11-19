@@ -7,23 +7,7 @@ const Movie = ({ data, scale }) => {
   const moviesData = data;
 
   // validate isMoviesData exist
-  const [isMoviesData, setIsMoviesData] = useState(false);
-
-  // console.log(moviesData, isMoviesData)
-
-  useEffect(() => {
-    if (!moviesData || moviesData === undefined || !moviesData.lenght) setIsMoviesData(false);
-    if (moviesData) setIsMoviesData(true);
-  }, [moviesData]);
-
-  if (!isMoviesData) {
-    return (
-      <div className="sm:w-2/3 w-full h-96 mt-10 flex flex-col items-center pr-28">
-        <PiSmileySadFill className="text-gray-500 text-5" />
-        <h1 className="text-3xl font-medium text-gray-500">ERR Bad Server</h1>
-      </div>
-    );
-  }
+  // const [isMoviesData, setIsMoviesData] = useState(false);
 
   const ScaleValid = ({ children }) => {
     if (scale === "forUpcomingMovies")
@@ -41,22 +25,22 @@ const Movie = ({ data, scale }) => {
 
   return (
     <>
-      {moviesData.map((movie) => (
-        <GoToMovieDetails key={movie.id} id={movie.id}>
+      {moviesData?.map((movie) => (
+        <GoToMovieDetails key={movie?.id} id={movie?.id}>
           <ScaleValid>
             <div className="poster relative w-full h-5/6">
               <img
-                src={`${baseImgUrl}/${movie.poster_path}`}
+                src={`${baseImgUrl}/${movie?.poster_path}`}
                 alt=""
                 className="w-full h-full object-fill rounded-lg"
               />
               <div className="overlay w-full h-full absolute top-0 bg-gradient-to-b from-transparent from-15% to-gray-800 opacity-90 rounded-lg"></div>
               <div className="w-full absolute bottom-5 flex justify-center">
-                <h3 className="text-yellow-500 lg:text-xl sm:text-base text-sm">{movie.vote_average.toString().slice(0, 3)}</h3>
+                <h3 className="text-yellow-500 lg:text-xl sm:text-base text-sm">{movie?.vote_average?.toString().slice(0, 3)}</h3>
               </div>
             </div>
             <h3 className="font-medium text-center mt-3 lg:text-xl sm:text-base text-sm">
-              {movie.title}
+              {movie?.title}
             </h3>
           </ScaleValid>
         </GoToMovieDetails>

@@ -2,9 +2,6 @@ import { useEffect, useState } from "react";
 import { Router, Route, Redirect, useLocation } from "wouter";
 import Home from "./pages/Home";
 import MovieDetails from "./pages/MovieDetails";
-import MovieList from "./pages/MovieListGenre";
-import { Provider } from "react-redux";
-import store from "./features/redux/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MovieListGenre from "./pages/MovieListGenre";
 
@@ -20,7 +17,7 @@ function App() {
   }, [location, setLocation]);
   return (
     <>
-      <Provider store={store}>
+      {/* <Provider store={store}> */}
         <QueryClientProvider client={queryClient}>
           <Router>
             <Route path="/home">
@@ -36,7 +33,7 @@ function App() {
           {/* <MovieDetails /> */}
           {/* <MovieList /> */}
         </QueryClientProvider>
-      </Provider>
+      {/* </Provider> */}
     </>
   );
 }

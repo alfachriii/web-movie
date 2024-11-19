@@ -9,6 +9,8 @@ import { useFetchPopularMovies } from "../features/useFetchPopularMovies";
 import { useSearchMovies } from "../features/useSearchMovies";
 import Movie from "./components/Movie";
 import GoToMovieDetails from "../components/GoToMovieDetails";
+import MovieListLoading from "./components/MovieListLoading";
+import SelectedMovieLoading from "./components/SelectedMovieLoading";
 
 const Home = () => {
   const baseImgUrl = import.meta.env.VITE_BASE_IMG_URL;
@@ -18,24 +20,26 @@ const Home = () => {
     isError: isErorrFetchPopularMovie,
   } = useFetchPopularMovies();
 
-  //   console.log(dataPopularMovies)
-  useAddToLocalStorage("popular_movies", dataPopularMovies?.data.results || []);
+  // const [isPopularMoviesData, setIsPopularMoviesData] = useState(false);
 
-  const popularMoviesData = useSelector((state) => state.movies.popular.data);
+  // useEffect(() => {
+  //   if (!popularMoviesData.lenght) setIsPopularMoviesData(false);
+  //   if (popularMoviesData) setIsPopularMoviesData(true);
+  // }, [popularMoviesData]);
 
-  const [isPopularMoviesData, setIsPopularMoviesData] = useState(false);
-
-  useEffect(() => {
-    if (!popularMoviesData.lenght) setIsPopularMoviesData(false);
-    if (popularMoviesData) setIsPopularMoviesData(true);
-  }, [popularMoviesData]);
-
-  const [selectedMovieData, setSelectedMovieData] = useState({});
-  //   console.log(selectedMovieData)
+  const [selectedMovieData, setSelectedMovieData] = useState(null);
   const getSelectedMovieData = () => {
     const random = Math.floor(Math.random() * 21);
-    setSelectedMovieData(popularMoviesData[random]);
+
+    setSelectedMovieData(dataPopularMovies?.data.results[random]);
   };
+
+  useEffect(() => {
+    if (dataPopularMovies?.data?.results && !selectedMovieData) {
+      getSelectedMovieData();
+    }
+  }, [dataPopularMovies, selectedMovieData]);
+  // console.log(selectedMovieData)
 
   const [screenSize, setScreenSize] = useState({
     width: window.innerWidth,
@@ -63,10 +67,6 @@ const Home = () => {
 
   const limittedOverView = limitWords(selectedMovieData?.overview);
 
-  useEffect(() => {
-    getSelectedMovieData();
-  }, []);
-
   //   SEARCH
   function sanitizeInput(input) {
     return DOMPurify.sanitize(input);
@@ -84,7 +84,7 @@ const Home = () => {
   //   console.log(shouldFetch);
   const {
     data: searchMoviesData,
-    isLoading,
+    isLoading: isLoadingSearch,
     refetch: searchRefetch,
   } = useSearchMovies(searchKeyword, shouldFetch);
 
@@ -107,14 +107,22 @@ const Home = () => {
   };
 
   const ShowMovies = () => {
-    if (isErorrFetchPopularMovie || !isPopularMoviesData)
+    // if (isErorrFetchPopularMovie || !isPopularMoviesData)
+    //   return (
+    //     <div className="sm:w-2/3 w-10/12 min-h-64 mt-4 flex justify-center items-center text-gray-500">
+    //       <h1 className="text-4xl">{":("}</h1>
+    //       <h2 className="">Movies data Not Found</h2>
+    //     </div>
+    //   );
+    if (isLoadingFetchPopularMovie || isLoadingSearch)
       return (
-        <div className="sm:w-2/3 w-10/12 min-h-64 mt-4 flex justify-center items-center text-gray-500">
-          <h1 className="text-4xl">{":("}</h1>
-          <h2 className="">Movies data Not Found</h2>
+        <div id="search-movies" className="sm:w-2/3 w-10/12 mt-4">
+          <MovieListLoading />
         </div>
       );
+
     if (!movieSearchResults.length || !shouldFetch) return <PopularMovie />;
+
     return (
       <div id="search-movies" className="sm:w-2/3 w-10/12 mt-4">
         <h3>{`Search results for: ${searchKeyword}`}</h3>
@@ -124,8 +132,6 @@ const Home = () => {
       </div>
     );
   };
-
-  console.log(isErorrFetchPopularMovie);
 
   return (
     <>
@@ -139,28 +145,34 @@ const Home = () => {
           onSearch={handleSearchMovie}
         />
         <div id="explore" className="sm:w-2/3 w-10/12 flex flex-col">
-          <h2 className="font-bold lg:text-3xl text-xl">Explore</h2>
-          <h3 className="text-stone-400 lg:text-xl text-base">
-            What are you gonna watch today?
-          </h3>
-          <GoToMovieDetails id={selectedMovieData.id}>
-            <div className="img-preview relative mt-3">
-              <div className="img w-full sm:h-48 h-32">
-                <img
-                  src={`${baseImgUrl}${selectedMovieData?.backdrop_path}`}
-                  className="w-full h-full object-cover rounded-lg opacity-80"
-                  alt=""
-                />
-              </div>
-              <div className="overlay absolute top-0 w-full h-full bg-gradient-to-r from-black from-10% to-transparent opacity-90 rounded-lg"></div>
-              <div className="text-preview sm:p-10 p-5 absolute sm:bottom-5 bottom-0 w-3/4">
-                <h2>{selectedMovieData?.title}</h2>
-                <h3 className="mt-2 font-thin lg:text-xl sm:text-base text-sm">
-                  {limittedOverView}
-                </h3>
-              </div>
-            </div>
-          </GoToMovieDetails>
+          {!dataPopularMovies && isLoadingFetchPopularMovie ? (
+            <SelectedMovieLoading />
+          ) : (
+            <>
+              <h2 className="font-bold lg:text-3xl text-xl">Explore</h2>
+              <h3 className="text-stone-400 lg:text-xl text-base">
+                What are you gonna watch today?
+              </h3>
+              <GoToMovieDetails id={selectedMovieData?.id}>
+                <div className="img-preview relative mt-3">
+                  <div className="img w-full sm:h-48 h-32">
+                    <img
+                      src={`${baseImgUrl}${selectedMovieData?.backdrop_path}`}
+                      className="w-full h-full object-cover rounded-lg opacity-80"
+                      alt=""
+                    />
+                  </div>
+                  <div className="overlay absolute top-0 w-full h-full bg-gradient-to-r from-black from-10% to-transparent opacity-90 rounded-lg"></div>
+                  <div className="text-preview sm:p-10 p-5 absolute sm:bottom-5 bottom-0 w-3/4">
+                    <h2>{selectedMovieData?.title}</h2>
+                    <h3 className="mt-2 font-thin lg:text-xl sm:text-base text-sm">
+                      {limittedOverView}
+                    </h3>
+                  </div>
+                </div>
+              </GoToMovieDetails>
+            </>
+          )}
         </div>
         <ShowMovies />
       </div>
