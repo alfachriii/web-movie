@@ -1,5 +1,4 @@
 import React from "react";
-import moviePoster from "../../assets/LIFT.jpg";
 import Movie from "./Movie";
 import { useFetchUpcomingMovies } from "../../features/useFetchUpcomingMovies";
 import UpcomingMovieLoading from "./UpcomingMovieLoading";
