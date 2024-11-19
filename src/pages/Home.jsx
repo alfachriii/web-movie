@@ -107,13 +107,6 @@ const Home = () => {
   };
 
   const ShowMovies = () => {
-    // if (isErorrFetchPopularMovie || !isPopularMoviesData)
-    //   return (
-    //     <div className="sm:w-2/3 w-10/12 min-h-64 mt-4 flex justify-center items-center text-gray-500">
-    //       <h1 className="text-4xl">{":("}</h1>
-    //       <h2 className="">Movies data Not Found</h2>
-    //     </div>
-    //   );
     if (isLoadingFetchPopularMovie || isLoadingSearch)
       return (
         <div id="search-movies" className="sm:w-2/3 w-10/12 mt-4">
